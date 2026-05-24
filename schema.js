@@ -4,6 +4,7 @@ const review = require("./models/review");
 module.exports.listingSchema = joi.object({
   title: joi.string().required(),
   description: joi.string().required(),
+  category: joi.array().items(joi.string()).default([]),
   location: joi.string().required(),
   country: joi.string().required(),
   price: joi.number().required().min(0),

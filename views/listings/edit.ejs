@@ -6,13 +6,13 @@
         <form method="POST" action="/listings/<%= listing._id %>?_method=PUT" novalidate class="needs-validation" enctype="multipart/form-data">
             <div class="mb-3">
                 <label for="title" class="form-label">Title</label>
-                <input type="text" value="<%= listing.title %>" name="title" class="form-control" required>
+                <input type="text" value="<%= listing.title %>" name="listing[title]" class="form-control" required>
                 <div class="invalid-feedback">Please add a valid Title</div>
             </div>
                 
             <div class="mb-3">
                 <label for="description" class="form-label">Description</label>
-                <textarea name="description" class="form-control" required><%= listing.description %></textarea>
+                <textarea name="listing[description]" class="form-control" required><%= listing.description %></textarea>
                 <div class="invalid-feedback">Please enter a short description</div>
             </div>
 
@@ -22,6 +22,55 @@
             </div>
                 
             <div class="mb-3">
+                <label class="form-label">Category</label>
+                <br>
+
+                <input type="checkbox" name="listing[category]" value="Trending"
+                    <%= (typeof listing !== "undefined" && listing.category.includes("Trending")) ? "checked" : "" %> >
+                Trending <br>
+
+                <input type="checkbox" name="listing[category]" value="Rooms"
+                    <%= (typeof listing !== "undefined" && listing.category.includes("Rooms")) ? "checked" : "" %> >
+                Rooms <br>
+
+                <input type="checkbox" name="listing[category]" value="Iconic Cities"
+                    <%= (typeof listing !== "undefined" && listing.category.includes("Iconic Cities")) ? "checked" : "" %> >
+                Iconic Cities <br>
+
+                <input type="checkbox" name="listing[category]" value="Mountains"
+                    <%= (typeof listing !== "undefined" && listing.category.includes("Mountains")) ? "checked" : "" %> >
+                Mountains <br>
+
+                <input type="checkbox" name="listing[category]" value="Castles"
+                    <%= (typeof listing !== "undefined" && listing.category.includes("Castles")) ? "checked" : "" %> >
+                Castles <br>
+
+                <input type="checkbox" name="listing[category]" value="Amazing Pools"
+                    <%= (typeof listing !== "undefined" && listing.category.includes("Amazing Pools")) ? "checked" : "" %> >
+                Amazing Pools <br>
+
+                <input type="checkbox" name="listing[category]" value="Arctic"
+                    <%= (typeof listing !== "undefined" && listing.category.includes("Arctic")) ? "checked" : "" %> >
+                Arctic <br>
+
+                <input type="checkbox" name="listing[category]" value="Camping"
+                    <%= (typeof listing !== "undefined" && listing.category.includes("Camping")) ? "checked" : "" %> >
+                Camping <br>
+
+                <input type="checkbox" name="listing[category]" value="Farms"
+                    <%= (typeof listing !== "undefined" && listing.category.includes("Farms")) ? "checked" : "" %> >
+                Farms <br>
+
+                <input type="checkbox" name="listing[category]" value="Domes"
+                    <%= (typeof listing !== "undefined" && listing.category.includes("Domes")) ? "checked" : "" %> >
+                Domes <br>
+
+                <input type="checkbox" name="listing[category]" value="Boats"
+                    <%= (typeof listing !== "undefined" && listing.category.includes("Boats")) ? "checked" : "" %> >
+                Boats <br>
+            </div>
+
+            <div class="mb-3">
                 <label for="image" class="form-label">Upload New Image</label>
                 <input type="file" name="image" class="form-control">
             </div>
@@ -29,19 +78,19 @@
             <div class="row">
                 <div class="mb-3 col-md-4">
                     <label for="price" class="form-label">Price</label>
-                    <input type="number" value="<%= listing.price %>" name="price" class="form-control" required>
+                    <input type="number" value="<%= listing.price %>" name="listing[price]" class="form-control" required>
                     <div class="invalid-feedback">Price should be valid</div>
                 </div>
                     
                 <div class="mb-3 col-md-8">
                     <label for="country" class="form-label">Country</label>
-                    <input type="text" value="<%= listing.country %>" name="country" class="form-control" required>
+                    <input type="text" value="<%= listing.country %>" name="listing[country]" class="form-control" required>
                     <div class="invalid-feedback">Country name should be valid</div>
                 </div>
             </div>
             <div class="mb-3">
                 <label for="location" class="form-label">Location</label>
-                <input type="text" value="<%= listing.location %>" name="location" class="form-control" required>
+                <input type="text" value="<%= listing.location %>" name="listing[location]" class="form-control" required>
                 <div class="invalid-feedback">Location should be valid</div>
             </div>
                 

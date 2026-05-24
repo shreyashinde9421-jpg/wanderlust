@@ -17,9 +17,17 @@
         <div class="card-body">
             <p class="card-text">Owned by <i><b> <%= listing.owner.username %> </b></i></p>
             <p class="card-text"> <%= listing.description %> </p>   
-            <p class="card-text"> &#8377; <%= listing.price.toLocaleString("en-IN") %> </p>    
-            <p class="card-text"> <%= listing.location %> </p>    
-            <p class="card-text"> <%= listing.country %> </p>    
+            <p class="card-text"><b>Price : </b> &#8377; <%= listing.price.toLocaleString("en-IN") %> </p>   
+            <p class="card-text">
+                <b>Categories :</b>
+                <% if(Array.isArray(listing.category)) { %>
+                    "<%= listing.category.join(', ') %>"
+                <% } else { %>
+                    "<%= listing.category %>"
+                <% } %>
+            </p>
+            <p class="card-text"><b>Location : </b> <%= listing.location %> </p>    
+            <p class="card-text"><b>Country : </b> <%= listing.country %> </p>    
         </div>
     </div>
 
@@ -37,12 +45,22 @@
     <% } %>
 
     <!-- rating form -->
-        <div class="col-6 offset-3 mb-3">
-            <% if(currUser) { %>
-            <h4>
-                <p><b><a class="text-decoration-none" data-bs-toggle="collapse" href="#reviewForm" role="button" aria-expanded="false" aria-controls="reviewForm" style="color: black;">
+    <div class="col-6 offset-3 mb-3">
+
+        <% if(currUser) { %>
+
+            <h4 class="mb-3">
+                <a class="text-decoration-none"
+                data-bs-toggle="collapse"
+                href="#reviewForm"
+                role="button"
+                aria-expanded="false"
+                aria-controls="reviewForm"
+                style="color: black;">
+
                     Share your experience <i class="bi bi-chevron-down"></i>
-                </a></b></p>
+
+                </a>
             </h4>
 
             <div class="collapse mr-3 ml-3" id="reviewForm">
@@ -50,34 +68,56 @@
                     <form action="/listings/<%= listing._id %>/reviews" method="POST" novalidate class="needs-validation ms-3 me-3">
 
                         <div class="mb-3 mt-3">
-                        <label for="rating" class="form-label">Rating</label>
-                        <fieldset class="starability-slot">
-                            <input type="radio" id="no-rate" class="input-no-rate" name="review[rating]" value="1" checked aria-label="No rating." />
-                            <input type="radio" id="first-rate1" name="review[rating]" value="1" />
-                            <label for="first-rate1" title="Terrible">1 star</label>
-                            <input type="radio" id="first-rate2" name="review[rating]" value="2" />
-                            <label for="first-rate2" title="Not good">2 stars</label>
-                            <input type="radio" id="first-rate3" name="review[rating]" value="3" />
-                            <label for="first-rate3" title="Average">3 stars</label>
-                            <input type="radio" id="first-rate4" name="review[rating]" value="4" />
-                            <label for="first-rate4" title="Very good">4 stars</label>
-                            <input type="radio" id="first-rate5" name="review[rating]" value="5" />
-                            <label for="first-rate5" title="Amazing">5 stars</label>
-                        </fieldset>
+                            <label for="rating" class="form-label">Rating</label>
+
+                            <fieldset class="starability-slot">
+                                <input type="radio" id="no-rate" class="input-no-rate" name="review[rating]" value="1" checked aria-label="No rating." />
+                                <input type="radio" id="first-rate1" name="review[rating]" value="1" />
+                                <label for="first-rate1" title="Terrible">1 star</label>
+
+                                <input type="radio" id="first-rate2" name="review[rating]" value="2" />
+                                <label for="first-rate2" title="Not good">2 stars</label>
+
+                                <input type="radio" id="first-rate3" name="review[rating]" value="3" />
+                                <label for="first-rate3" title="Average">3 stars</label>
+
+                                <input type="radio" id="first-rate4" name="review[rating]" value="4" />
+                                <label for="first-rate4" title="Very good">4 stars</label>
+
+                                <input type="radio" id="first-rate5" name="review[rating]" value="5" />
+                                <label for="first-rate5" title="Amazing">5 stars</label>
+                            </fieldset>
                         </div>
 
                         <div class="mt-3 mb-3">
                             <label for="comment" class="form-label">Comment</label>
+
                             <textarea name="review[comment]" id="comment" rows="3" class="form-control" required></textarea>
-                            <div class="invalid-feedback">Please add some comments for review</div>
+
+                            <div class="invalid-feedback">
+                                Please add some comments for review
+                            </div>
                         </div>
 
                         <button class="btn btn-outline-dark mb-3">Submit</button>
+
                     </form>
                 </div>
             </div>
-            <% } %>
-        </div>
+
+        <% } else { %>
+
+            <a class="text-decoration-none"
+            href="/login"
+            style="color: black;">
+            <h4>
+                Share your experience <i class="bi bi-chevron-down"></i>
+            </h4>
+            </a>
+
+        <% } %>
+
+    </div>
         
     <!-- Showing Review -->
     <div class="col-8 offset-3">
@@ -86,7 +126,7 @@
             <p><b>Reviews</b></p>
             <div class="row">
                 <% for(review of listing.reviews) { %>
-                    <div class="card col-5 ms-3 mb-2">
+                    <div class="card col-5 ms-3 mb-3 pe-4">
                         <div class="card-body mt-3 mb-3">
                             <h5 class="card-title"><i>@<%= review.author.username %></i></h5>
                             <div class="d-flex align-items-center mb-2">
@@ -119,30 +159,57 @@
     </div>
 
     <!-- Showing Map -->
-    <div class="col-8 offset-3 mb-3">
+    <div class="col-12 offset-3 mb-3" style="margin: auto;">
         <% if (lat && lng) { %>
-            <h3>Where you'll be</h3>
-            <div id="map" style="height:400px; width:80%;"></div>
+            <h3 style="text-align: center;">Where you'll be</h3>
+
+            <div id="map" style="height:450px; width:100%; border-radius:12px;"></div>
+
         <% } else { %>
             <h4>Invalid location</h4>
         <% } %>
     </div>
+
     <% if (lat && lng) { %>
-        <div class="col-8 offset-3">
-            <script>
-                lat = <%= lat %>;
-                lng = <%= lng %>;
+    <script>
 
-                let map = L.map('map').setView([lat, lng], 10);
+        let lat = <%= lat %>;
+        let lng = <%= lng %>;
 
-                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                    attribution: '&copy; OpenStreetMap contributors'
-                }).addTo(map);
+        let map = L.map('map', {
+            center: [lat, lng],
+            zoom: 13,
+            minZoom: 5,
+            maxZoom: 18
+        });
 
-                L.marker([lat, lng]).addTo(map)
-                .bindPopup('<%= listing.location %>, <%= listing.country %>')
-                .openPopup();
-            </script>
-        </div>
+        map.zoomControl.setPosition('topright');
+
+        let osm = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; OpenStreetMap contributors',
+            maxZoom: 18
+        }).addTo(map);
+
+        let customIcon = L.icon({
+            iconUrl: 'https://cdn-icons-png.flaticon.com/512/684/684908.png',
+            iconSize: [35, 35],
+            iconAnchor: [17, 35]
+        });
+
+        L.marker([lat, lng], { icon: customIcon })
+            .addTo(map)
+            .bindPopup(`
+                <b><%= listing.location %></b><br>
+                <%= listing.country %>
+            `)
+            .openPopup();
+
+        map.on('zoomend', function () {
+            let currentZoom = map.getZoom();
+            if (currentZoom > 18) {
+                map.setZoom(18);
+            }
+        });
+
+    </script>
     <% } %>
-</div>

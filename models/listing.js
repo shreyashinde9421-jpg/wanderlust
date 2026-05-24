@@ -10,8 +10,8 @@ const listingSchema = new Schema({
     },
     description: String,
     image: {
-    url: String,
-    filename: String,
+        url: String,
+        filename: String,
     },
     price: Number,
     location: String,
@@ -26,10 +26,11 @@ const listingSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: "User"
     },
-    // category: {
-    //     type: String,
-    //     enum: ["Trending", "Rooms", "Iconic Cities", "Mountains", "Castles", "Amazing Pools", "Arctic", "Camping", "Farms"],
-    // },
+    category: {
+        type: [String],
+        enum: ["Trending", "Rooms", "Iconic Cities", "Mountains", "Castles", "Amazing Pools", "Arctic", "Camping", "Farms", "Domes", "Boats"],
+        required: true,
+    },
 });
 
 // delete middleware for reviews

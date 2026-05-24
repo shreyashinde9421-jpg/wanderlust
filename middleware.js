@@ -6,14 +6,14 @@ const {listingSchema, reviewSchema} = require("./schema.js");
 module.exports.isLoggedIn = (req, res, next) => {
     if (!req.isAuthenticated()) {
         req.session.redirectUrl = req.originalUrl;
-        req.flash("error", "You must be logged in to create a listing");
+        req.flash("error", "You must be logged in first");
         return res.redirect("/login");
     }
     next();
 };
 
 module.exports.saveRedirectUrl = (req, res, next) => {
-    if(req.session.redirectUrl) {
+    if (req.session.redirectUrl) {
         res.locals.redirectUrl = req.session.redirectUrl;
     }
     next();
@@ -31,11 +31,12 @@ module.exports.isOwner = async(req, res, next) => {
 
 // joi middleware for error handling (listingSchema)
 module.exports.validateListing = (req, res, next) => {
-    let {error} = listingSchema.validate(req.body);
-    if(error) {
-        let errMsg = error.details.map((el) => el.message).join(",")
+    const { error } = listingSchema.validate(req.body.listing);
+
+    if (error) {
+        let errMsg = error.details.map((el) => el.message).join(",");
         throw new ExpressError(400, errMsg);
-    }else{
+    } else {
         next();
     }
 };

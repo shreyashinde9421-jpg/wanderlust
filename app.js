@@ -48,7 +48,7 @@ async function main() {
 
 // Home Route
 app.get("/", (req, res) => {
-    res.send("Working");
+    res.render("home");
 });
 
 // connect-mongo
@@ -60,7 +60,7 @@ const store = MongoStore.create({
   touchAfter: 24 * 3600
 });
 
-store.on("error", () => {
+store.on("error", (err) => {
     console.log("ERROR IN MONGO SESSION STORE", err);
 });
 
@@ -68,7 +68,7 @@ const sessionOptions = {
   store,
   secret: process.env.SESSION_SECRET || process.env.SECRET,
   resave: false,
-  saveUninitialized: true,
+  saveUninitialized: false,
   cookie: {
     expires: Date.now() + 7 * 24 * 60 * 60 * 1000,
     maxAge: 7 * 24 * 60 * 60 * 1000,
@@ -88,9 +88,16 @@ passport.deserializeUser(User.deserializeUser());
 
 
 app.use((req, res, next) => {
-    res.locals.success = req.flash("success");
-    res.locals.error = req.flash("error");
-    res.locals.currUser = req.user;
+    const success = req.flash("success");
+    const error = req.flash("error");
+
+    console.log("SUCCESS FLASH:", success);
+    console.log("ERROR FLASH:", error);
+
+    res.locals.success = success;
+    res.locals.error = error;
+    res.locals.currUser = req.user || null;
+
     next();
 });
 
@@ -99,15 +106,10 @@ app.use("/listings", listingsRouter);
 app.use("/listings/:id/reviews", reviewsRouter); 
 app.use("/", usersRouter); 
 
-// Page not found error
-app.all(/.*/, (req, res, next) => {
-    next(new ExpressError(404, "Page not found!"));
-});
-
-// Error handling
+// // Error handling
 app.use((err, req, res, next) => {
-    let {statusCode = 500, message = "Something went wrong"} = err;
-    res.status(statusCode).render("Error.ejs", {message});
+    let { statusCode = 500, message = "Something went wrong" } = err;
+    res.status(statusCode).render("Error", { message: String(message) });
 });
 
 // Start Express Server 

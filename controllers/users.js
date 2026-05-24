@@ -1,46 +1,53 @@
 const User = require("../models/user.js");
 
+// Render signup page
 module.exports.renderSignupForm = (req, res) => {
     res.render("users/signup.ejs");
 };
 
+// Signup + auto login (SAFE VERSION)
 module.exports.signup = async (req, res, next) => {
     try {
-        let { username, email, password } = req.body;
-        const newUser = new User({ email, username });
-        const registeredUser = await User.register(newUser, password);
-        console.log(registeredUser);
+        const { username, email, password } = req.body;
 
-        // Immediately log the user in after signup
+        const newUser = new User({ email, username });
+
+        const registeredUser = await User.register(newUser, password);
+
+        // Auto login safely
         req.login(registeredUser, (err) => {
-            if (err) {
-                return next(err);
-            }
+            if (err) return next(err);
+
             req.flash("success", "Welcome to Wanderlust");
-            res.redirect("/listings");
+            return res.redirect("/listings");
         });
+
     } catch (e) {
         req.flash("error", e.message);
-        res.redirect("/signup");
+        return res.redirect("/signup");
     }
 };
 
+// Render login page
 module.exports.renderLoginForm = (req, res) => {
     res.render("users/login.ejs");
 };
 
-module.exports.login = async(req, res) => {
+// Login success handler
+module.exports.login = (req, res) => {
     req.flash("success", "Welcome back to Wanderlust");
-    let redirectUrl = res.locals.redirectUrl || "/listings";
-    res.redirect(redirectUrl);
+
+    const redirectUrl = res.locals.redirectUrl || "/listings";
+
+    return res.redirect(redirectUrl);
 };
 
+// Logout (safe + modern Passport v0.6+)
 module.exports.logout = (req, res, next) => {
-    req.logOut((err) => {
-        if(err) {
-            return next(err);
-        }
+    req.logout((err) => {
+        if (err) return next(err);
+
         req.flash("success", "You are logged out!");
-        res.redirect("/listings");
-    })
+        return res.redirect("/listings");
+    });
 };
